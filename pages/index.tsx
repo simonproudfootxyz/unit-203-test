@@ -61,6 +61,27 @@ const CartStyles = styled.div`
       margin: 0;
     }
   }
+
+  footer {
+    border-top: 10px double white;
+    margin: 2rem 0;
+    padding: 2rem 0;
+    align-items: center;
+
+    div {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+
+      &.order-total {
+        font-weight: bold;
+      }
+    }
+
+    p {
+      margin: 0;
+    }
+  }
 `;
 
 export default function Home() {
@@ -70,6 +91,24 @@ export default function Home() {
         <h2>Your Cart</h2>
       </header>
       <LineItems lineItems={lineItems} />
+      <footer>
+        <div className="order-subtotal">
+          <p>Subtotal</p>
+          <p>{SUBTOTAL}</p>
+        </div>
+        <div className="order-subtotal">
+          <p>Taxes (estimated)</p>
+          <p>{HST}</p>
+        </div>
+        <div className="order-subtotal">
+          <p>Shipping</p>
+          <p>Free</p>
+        </div>
+        <div className="order-total">
+          <p>Total</p>
+          <p>{TOTAL}</p>
+        </div>
+      </footer>
     </CartStyles>
   );
 }
