@@ -158,6 +158,21 @@ export default function Home() {
       });
   }, []);
 
+  // FORM
+  const initialFormState = {
+    postalCode: "",
+  };
+  const [formState, setFormState] = useState(initialFormState);
+
+  const handleFormChange = (event) => {
+    const { name, value } = event.target;
+    const newFormState = {
+      ...formState,
+      [name]: value,
+    };
+    setFormState(newFormState);
+  };
+
   if (loading) return <p>Loading...</p>;
   return (
     <CartStyles>
@@ -169,6 +184,19 @@ export default function Home() {
         onRemoveButtonClick={removeLineItem}
         onAddButtonClick={addLineItem}
       />
+      <form>
+        <label htmlFor="postalCode">
+          Postal Code
+          <input
+            type="text"
+            name="postalCode"
+            value={formState.postalCode}
+            onChange={handleFormChange}
+            required
+          />
+        </label>
+        <button type="submit">Check Delivery Times</button>
+      </form>
       <footer>
         <div className="order-subtotal">
           <p>Subtotal</p>
