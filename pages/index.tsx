@@ -1,7 +1,8 @@
 import { lineItem, LineItems } from "../components/lineItems";
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatMoney } from "../lib/formatMoney";
+import { server } from "../config";
 
 //Styling variables
 const BLUE = "#172162"; //"rgb(23, 33, 98)";
@@ -89,6 +90,7 @@ const CartStyles = styled.div`
 
 export default function Home() {
   const [lineItems, setLineItems] = useState(initialLineItems);
+  const [loading, setLoading] = useState(true);
 
   // CART FUNCTIONALITY
   const removeLineItem = ({ target }) => {
@@ -146,6 +148,17 @@ export default function Home() {
     };
   };
 
+  // INITIALIZE
+  useEffect(() => {
+    fetch(`${server}/api/line-items`)
+      .then((res) => res.json())
+      .then((lineItemData) => {
+        setLineItems(lineItemData);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
   return (
     <CartStyles>
       <header>
