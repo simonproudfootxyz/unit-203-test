@@ -1,5 +1,6 @@
-import { LineItems } from "../components/lineItems";
+import { lineItem, LineItems } from "../components/lineItems";
 import styled from "styled-components";
+import { useState } from "react";
 
 //Styling variables
 const BLUE = "#172162"; //"rgb(23, 33, 98)";
@@ -7,7 +8,7 @@ const LIGHT_GREY = "#6e7484";
 const BLACK = "#000000";
 
 //First part given
-const lineItems = [
+const initialLineItems = [
   {
     id: 1,
     title: "Grey Sofa",
@@ -20,6 +21,7 @@ const lineItems = [
   },
   {
     id: 2,
+
     title: "Blue Sofa",
     price: 994.99,
     quantity: 1,
@@ -85,12 +87,24 @@ const CartStyles = styled.div`
 `;
 
 export default function Home() {
+  const [lineItems, setLineItems] = useState(initialLineItems);
+
+  // CART FUNCTIONALITY
+  const removeLineItem = ({ target }) => {
+    const { value } = target;
+    const productId = parseInt(value);
+    const updatedLineItems = lineItems.filter(
+      (item: lineItem) => item.id !== productId
+    );
+    setLineItems(updatedLineItems);
+  };
+
   return (
     <CartStyles>
       <header>
         <h2>Your Cart</h2>
       </header>
-      <LineItems lineItems={lineItems} />
+      <LineItems lineItems={lineItems} onRemoveButtonClick={removeLineItem} />
       <footer>
         <div className="order-subtotal">
           <p>Subtotal</p>
