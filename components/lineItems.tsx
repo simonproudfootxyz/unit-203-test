@@ -72,9 +72,14 @@ export interface lineItem {
 interface lineItemsProps {
   lineItems: lineItem[];
   onRemoveButtonClick: Function;
+  onAddButtonClick: Function;
 }
 
-const LineItems = ({ lineItems, onRemoveButtonClick }: lineItemsProps) => {
+const LineItems = ({
+  lineItems,
+  onRemoveButtonClick,
+  onAddButtonClick,
+}: lineItemsProps) => {
   return (
     <LineItemsStyles>
       {lineItems.map((lineItem: lineItem) => (
@@ -103,6 +108,9 @@ const LineItems = ({ lineItems, onRemoveButtonClick }: lineItemsProps) => {
             <p>{formatMoney(lineItem.quantity * lineItem.price)}</p>
             <p className="line-item__delivery">{ESTIMATED_DELIVERY}</p>
             <div className="line-item__button-container">
+              <TextButtonStyles value={lineItem.id} onClick={onAddButtonClick}>
+                Add
+              </TextButtonStyles>
               <TextButtonStyles
                 value={lineItem.id}
                 onClick={onRemoveButtonClick}

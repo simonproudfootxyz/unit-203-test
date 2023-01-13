@@ -99,12 +99,27 @@ export default function Home() {
     setLineItems(updatedLineItems);
   };
 
+  const addLineItem = ({ target }) => {
+    const { value } = target;
+    const productId = parseInt(value);
+    const newLineItems: lineItem[] = lineItems.map((lineItem: lineItem) =>
+      lineItem.id === productId
+        ? { ...lineItem, quantity: lineItem.quantity + 1 }
+        : lineItem
+    );
+    setLineItems(newLineItems);
+  };
+
   return (
     <CartStyles>
       <header>
         <h2>Your Cart</h2>
       </header>
-      <LineItems lineItems={lineItems} onRemoveButtonClick={removeLineItem} />
+      <LineItems
+        lineItems={lineItems}
+        onRemoveButtonClick={removeLineItem}
+        onAddButtonClick={addLineItem}
+      />
       <footer>
         <div className="order-subtotal">
           <p>Subtotal</p>
