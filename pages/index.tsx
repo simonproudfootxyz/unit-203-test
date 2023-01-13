@@ -1,3 +1,6 @@
+import { LineItems } from "../components/lineItems";
+import styled from "styled-components";
+
 //Styling variables
 const BLUE = "#172162"; //"rgb(23, 33, 98)";
 const LIGHT_GREY = "#6e7484";
@@ -41,3 +44,32 @@ const SUBTOTAL = 2094.97;
 const HST = 272.3461;
 const TOTAL = 2382.3161;
 const ESTIMATED_DELIVERY = "Nov 24, 2021";
+
+const CartStyles = styled.div`
+  display: grid;
+  height: 100%;
+  width: 40%;
+  min-width: 900px;
+  padding: 20px;
+  margin: 0 auto;
+  grid-template-rows: auto 1fr auto;
+
+  header {
+    border-bottom: 5px solid white;
+
+    h2 {
+      margin: 0;
+    }
+  }
+`;
+
+export default function Home() {
+  return (
+    <CartStyles>
+      <header>
+        <h2>Your Cart</h2>
+      </header>
+      <LineItems lineItems={lineItems} />
+    </CartStyles>
+  );
+}
