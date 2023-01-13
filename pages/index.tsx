@@ -1,6 +1,7 @@
 import { lineItem, LineItems } from "../components/lineItems";
 import styled from "styled-components";
 import { useState } from "react";
+import { formatMoney } from "../lib/formatMoney";
 
 //Styling variables
 const BLUE = "#172162"; //"rgb(23, 33, 98)";
@@ -110,6 +111,41 @@ export default function Home() {
     setLineItems(newLineItems);
   };
 
+  // CART CALCULATIONS
+  const calcCartSubTotal = (lineItems: lineItem[]): number => {
+    const total = lineItems.reduce(
+      (tally, lineItem) => tally + lineItem.quantity * lineItem.price,
+      0
+    );
+    return total;
+  };
+
+  const calcCartTaxes = (lineItems: lineItem[]): number => {
+    const cartSubTotal = calcCartSubTotal(lineItems);
+    const cartTotalTaxes = cartSubTotal * 0.13;
+    return cartTotalTaxes;
+  };
+
+  const calcLineItemTotal = (lineItems: lineItem[]): number => {
+    const cartSubTotal = calcCartSubTotal(lineItems);
+    const cartTaxes = calcCartTaxes(lineItems);
+    const total = cartSubTotal + cartTaxes;
+    return total;
+  };
+
+  const calculateFees = (lineItems: lineItem[]) => {
+    const cartSubTotal = calcCartSubTotal(lineItems);
+    const cartTaxes = calcCartTaxes(lineItems);
+    const shipping = 15;
+    const cartTotal = calcLineItemTotal(lineItems) + shipping;
+    return {
+      cartSubTotal,
+      shipping,
+      cartTaxes,
+      cartTotal,
+    };
+  };
+
   return (
     <CartStyles>
       <header>
@@ -123,19 +159,19 @@ export default function Home() {
       <footer>
         <div className="order-subtotal">
           <p>Subtotal</p>
-          <p>{SUBTOTAL}</p>
+          <p>{formatMoney(calculateFees(lineItems).cartSubTotal)}</p>
         </div>
         <div className="order-subtotal">
           <p>Taxes (estimated)</p>
-          <p>{HST}</p>
+          <p>{formatMoney(calculateFees(lineItems).cartTaxes)}</p>
         </div>
         <div className="order-subtotal">
           <p>Shipping</p>
-          <p>Free</p>
+          <p>{formatMoney(calculateFees(lineItems).shipping)}</p>
         </div>
         <div className="order-total">
           <p>Total</p>
-          <p>{TOTAL}</p>
+          <p>{formatMoney(calculateFees(lineItems).cartTotal)}</p>
         </div>
       </footer>
     </CartStyles>
