@@ -163,6 +163,12 @@ export default function Home() {
     postalCode: "",
   };
   const [formState, setFormState] = useState(initialFormState);
+  const clearForm = (formState) => {
+    const blankState = Object.fromEntries(
+      Object.entries(formState).map(([key, value]) => [key, ""])
+    );
+    setFormState(blankState);
+  };
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
@@ -171,6 +177,17 @@ export default function Home() {
       [name]: value,
     };
     setFormState(newFormState);
+  };
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    fetch(`${server}/api/line-items?postalCode=${formState.postalCode}`)
+      .then((res) => res.json())
+      .then((lineItemData) => {
+        setLineItems(lineItemData);
+        setLoading(false);
+      });
+    clearForm(formState);
   };
 
   if (loading) return <p>Loading...</p>;
@@ -184,7 +201,7 @@ export default function Home() {
         onRemoveButtonClick={removeLineItem}
         onAddButtonClick={addLineItem}
       />
-      <form>
+      <form onSubmit={handleFormSubmit}>
         <label htmlFor="postalCode">
           Postal Code
           <input

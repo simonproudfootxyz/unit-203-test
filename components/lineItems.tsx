@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { formatMoney } from "../lib/formatMoney";
+import { lineItem } from "../pages/api/line-items";
 
 const ESTIMATED_DELIVERY = "Nov 24, 2021";
 
@@ -59,16 +60,6 @@ const TextButtonStyles = styled.button`
   color: black;
 `;
 
-export interface lineItem {
-  id: number;
-  title: string;
-  price: number;
-  quantity: number;
-  image: string;
-  swatchColor: string;
-  swatchTitle: string;
-}
-
 interface lineItemsProps {
   lineItems: lineItem[];
   onRemoveButtonClick: Function;
@@ -106,7 +97,7 @@ const LineItems = ({
           </div>
           <div className="line-item__utilities">
             <p>{formatMoney(lineItem.quantity * lineItem.price)}</p>
-            <p className="line-item__delivery">{ESTIMATED_DELIVERY}</p>
+            <p className="line-item__delivery">{lineItem.deliveryDate}</p>
             <div className="line-item__button-container">
               <TextButtonStyles value={lineItem.id} onClick={onAddButtonClick}>
                 Add

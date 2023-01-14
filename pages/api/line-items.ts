@@ -46,8 +46,77 @@ const lineItems: lineItem[] = [
   },
 ];
 
+const DELIVERY_DATES = [
+  {
+    postal: "V",
+    ids: [2],
+    estimatedDeliveryDate: "Nov 24, 2021",
+  },
+  {
+    postal: "V",
+    ids: [1, 3],
+    estimatedDeliveryDate: "Nov 19, 2021",
+  },
+  {
+    postal: "M",
+    ids: [2, 3],
+    estimatedDeliveryDate: "Nov 22, 2021",
+  },
+  {
+    postal: "M",
+    ids: [1],
+    estimatedDeliveryDate: "Dec 19, 2021",
+  },
+  {
+    postal: "K",
+    ids: [1, 2, 3],
+    estimatedDeliveryDate: "Dec 24, 2021",
+  },
+];
+
+const getDeliveryEstimate = (lineItem, postalCodeFirstChar) => {
+  const postalClustersForLetter = DELIVERY_DATES.filter((cluster) => {
+    return cluster.postal === postalCodeFirstChar;
+  });
+  const deliveryDate = postalClustersForLetter.find((cluster) =>
+    cluster.ids.includes(lineItem.id)
+  )?.estimatedDeliveryDate;
+  return deliveryDate;
+};
+
+const getLineItemsWithDelivery = (
+  lineItems,
+  postalCodeFirstChar,
+  haveDeliveryBasedOnPostal
+): lineItem[] => {
+  const lineItemsWithDelivery: lineItem[] = lineItems.map(
+    (lineItem: lineItem) => {
+      return {
+        ...lineItem,
+        deliveryDate: haveDeliveryBasedOnPostal
+          ? getDeliveryEstimate(lineItem, postalCodeFirstChar)
+          : "No info available",
+      };
+    }
+  );
+  return lineItemsWithDelivery;
+};
+
 const handler = (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  return res.status(200).json(lineItems);
+  const { postalCode } = req.query;
+  if (postalCode === undefined) {
+    return res.status(200).json(lineItems);
+  }
+  const postalCodeFirstChar = Array.from(postalCode)[0].toUpperCase();
+  const haveDeliveryBasedOnPostal = DELIVERY_DATES.some(
+    (date) => date.postal === postalCodeFirstChar
+  );
+  const lineItemsWithDelivery = getLineItemsWithDelivery(
+    lineItems,
+    postalCodeFirstChar,
+    haveDeliveryBasedOnPostal
+  );
+  return res.status(200).json(lineItemsWithDelivery);
 };
 
 export default handler;
