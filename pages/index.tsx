@@ -93,20 +93,29 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   // CART FUNCTIONALITY
-  const removeLineItem = ({ target }) => {
+  const handleRemoveButtonClick = ({ target }) => {
     const { value } = target;
     const productId = parseInt(value);
+    removeLineItem(productId);
+  };
+
+  const removeLineItem = (productId) => {
     const updatedLineItems = lineItems.filter(
       (item: lineItem) => item.id !== productId
     );
     setLineItems(updatedLineItems);
   };
 
-  const addLineItem = ({ target }) => {
+  const handleAddButtonClick = ({ target }) => {
     const { value } = target;
-    const productId = parseInt(value);
+    const product = JSON.parse(value);
+    addLineItem(product);
+  };
+
+  const addLineItem = (product) => {
+    const { id } = product;
     const newLineItems: lineItem[] = lineItems.map((lineItem: lineItem) =>
-      lineItem.id === productId
+      lineItem.id === id
         ? { ...lineItem, quantity: lineItem.quantity + 1 }
         : lineItem
     );
@@ -198,8 +207,8 @@ export default function Home() {
       </header>
       <LineItems
         lineItems={lineItems}
-        onRemoveButtonClick={removeLineItem}
-        onAddButtonClick={addLineItem}
+        onRemoveButtonClick={handleRemoveButtonClick}
+        onAddButtonClick={handleAddButtonClick}
       />
       <form onSubmit={handleFormSubmit}>
         <label htmlFor="postalCode">

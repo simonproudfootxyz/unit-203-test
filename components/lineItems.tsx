@@ -99,7 +99,10 @@ const LineItems = ({
             <p>{formatMoney(lineItem.quantity * lineItem.price)}</p>
             <p className="line-item__delivery">{lineItem.deliveryDate}</p>
             <div className="line-item__button-container">
-              <TextButtonStyles value={lineItem.id} onClick={onAddButtonClick}>
+              <TextButtonStyles
+                value={JSON.stringify(lineItem)}
+                onClick={onAddButtonClick}
+              >
                 Add
               </TextButtonStyles>
               <TextButtonStyles
